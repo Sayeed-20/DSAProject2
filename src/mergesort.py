@@ -1,7 +1,7 @@
 # The implementation for mergesort was referenced from
 
 # Merge two subarrays from arr
-def merge(arr, left, mid, right):
+def merge(arr, left, mid, right, sortOrder):
     # Create X = arr[left..mid] & Y = arr[mid+1..right]
     n1 = mid - left + 1
     n2 = right - mid
@@ -19,13 +19,22 @@ def merge(arr, left, mid, right):
     k = left
 
     while i < n1 and j < n2:
-        if X[i] <= Y[j]:
-            arr[k] = X[i]
-            i += 1
-        else:
-            arr[k] = Y[j]
-            j += 1
-        k += 1
+        if sortOrder == 'descending':
+            if X[i] <= Y[j]:
+                arr[k] = X[i]
+                i += 1
+            else:
+                arr[k] = Y[j]
+                j += 1
+            k += 1
+        elif sortOrder == 'ascending':
+            if X[i] > Y[j]:
+                arr[k] = X[i]
+                i += 1
+            else:
+                arr[k] = Y[j]
+                j += 1
+            k += 1
 
     # When we run out of elements in either X or Y append the remaining elements
     while i < n1:
@@ -39,12 +48,12 @@ def merge(arr, left, mid, right):
         k += 1
 
 
-def mergeSort(arr, left, right):
+def mergeSort(arr, left, right, sortOrder="descending"):
     if left < right:
         # m is the point where the array is divided into two subarrays
         mid = left + (right - left) / 2
-        mergeSort(arr, left, mid)
-        mergeSort(arr, mid + 1, right)
+        mergeSort(arr, left, mid, sortOrder)
+        mergeSort(arr, mid + 1, right, sortOrder)
 
         # Merge the sorted subarrays
-        merge(arr, left, mid, right)
+        merge(arr, left, mid, right, sortOrder)
