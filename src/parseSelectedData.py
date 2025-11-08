@@ -1,7 +1,7 @@
 from dataset import Dataset
 
 # This function creates a Dataset object out of the pieces of data selected in the dictionaries
-def parseSelectedData(df, cityDict, propDict, bedDict, bathDict):
+def parseSelectedData(df, cityDict, propDict, bedDict, bathDict): # O(57n)
 
     for key in cityDict:
         if cityDict[key] == False:
@@ -24,7 +24,7 @@ def parseSelectedData(df, cityDict, propDict, bedDict, bathDict):
     return Dataset(df)
 
 # This function is used to retrieve data from the backend to communicate with the frontend
-def getSelectedData(df, cityDict, propDict, bedDict, bathDict):
+def getSelectedData(df, cityDict, propDict, bedDict, bathDict): #O(57n)
 
     for key in cityDict:
         if cityDict[key] == False:

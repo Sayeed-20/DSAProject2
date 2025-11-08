@@ -26,7 +26,7 @@ def partition(arr, low, high, sortOrder):
     arr[low], arr[down] = arr[down], arr[low]
     return down
 
-def quicksort(arr, low, high, sortOrder="descending"):
+def quicksort(arr, low, high, sortOrder="descending"): #O(m^2)
     if low < high:
         p = partition(arr, low, high, sortOrder)
         quicksort(arr, low, p - 1, sortOrder)

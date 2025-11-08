@@ -8,7 +8,7 @@ from mergesort import *
 from parseSelectedData import *
 
 # Read dataset
-df = pd.read_csv("pakistanHousingData_cleaned.csv")
+df = pd.read_csv("pakistanHousingData_cleaned.csv") # O(n)
 df["bedrooms"] = df["bedrooms"].astype(str)
 df["baths"] = df["baths"].astype(str)
 
@@ -22,7 +22,7 @@ app.layout = html.Div([
         # Display map centered on selected data
         dcc.Graph(
             id='All of Pakistan',
-            figure=createFig(df, selectedCities, selectedPropTypes, selectedBedrooms, selectedBathrooms),
+            figure=createFig(df, selectedCities, selectedPropTypes, selectedBedrooms, selectedBathrooms), # O(m)
             style={'width': '70%'}
         ),
         # Display datatable in center
@@ -30,8 +30,8 @@ app.layout = html.Div([
             html.H3("Sorted Housing Data"),
             dash_table.DataTable(
                 id='housing-table',
-                columns=[{"name": i, "id": i} for i in df.columns],
-                data=df.to_dict("records"),
+                columns=[{"name": i, "id": i} for i in df.columns], # O(5)
+                data=df.to_dict("records"), #O(N)
                 style_table={'height': '600px', 'overflowY': 'auto'},
                 style_cell={'textAlign': 'left', 'padding': '5px'},
                 style_header={'backgroundColor': 'lightgrey', 'fontWeight': 'bold'},
@@ -69,7 +69,7 @@ app.layout = html.Div([
 
             # Select which property types
             dcc.Dropdown(
-                ["House", "Penthouse", "Farm House", "Lower Portion", "Upper Portion"],
+                ["House", "Penthouse", "Flat", "Farm House", "Lower Portion", "Upper Portion"],
                 id='property type selection',
                 multi=True, value=all_types,
                 placeholder="Select which property types"

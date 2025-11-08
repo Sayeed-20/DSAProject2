@@ -43,7 +43,7 @@ def merge(arr, left, mid, right, sortOrder):
         j += 1
         k += 1
 
-def mergeSort(arr, left, right, sortOrder="descending"):
+def mergeSort(arr, left, right, sortOrder="descending"): #O(mlogm)
     if left < right:
         # m is the point where the array is divided into two subarrays
         mid = (left + right) // 2
