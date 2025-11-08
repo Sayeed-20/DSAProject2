@@ -5,8 +5,8 @@ def merge(arr, left, mid, right, sortOrder):
     # Create X = arr[left..mid] & Y = arr[mid+1..right]
     n1 = mid - left + 1
     n2 = right - mid
-    X = [n1]
-    Y = [n2]
+    X = []
+    Y = []
 
     for i in range(n1):
         X[i] = arr[left + i]
@@ -20,7 +20,7 @@ def merge(arr, left, mid, right, sortOrder):
 
     while i < n1 and j < n2:
         if sortOrder == 'descending':
-            if X[i] <= Y[j]:
+            if X[i] >= Y[j]:
                 arr[k] = X[i]
                 i += 1
             else:
@@ -28,7 +28,7 @@ def merge(arr, left, mid, right, sortOrder):
                 j += 1
             k += 1
         elif sortOrder == 'ascending':
-            if X[i] > Y[j]:
+            if X[i] <= Y[j]:
                 arr[k] = X[i]
                 i += 1
             else:
@@ -51,7 +51,7 @@ def merge(arr, left, mid, right, sortOrder):
 def mergeSort(arr, left, right, sortOrder="descending"):
     if left < right:
         # m is the point where the array is divided into two subarrays
-        mid = left + (right - left) / 2
+        mid = (left + right) // 2
         mergeSort(arr, left, mid, sortOrder)
         mergeSort(arr, mid + 1, right, sortOrder)
 

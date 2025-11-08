@@ -63,7 +63,7 @@ app.layout = html.Div([
             dcc.Dropdown(
                 ['Faisalabad', 'Islamabad', 'Karachi', 'Lahore', 'Rawalpindi'],
                 id='city selection',
-                multi=False, value='Faisalabad',
+                multi=True, value='Faisalabad',
                 placeholder="Select which cities"
             ),
             html.Div(id='dd-output-container-city'),
@@ -77,20 +77,20 @@ app.layout = html.Div([
             ),
             html.Div(id='dd-output-container-property'),
 
-            # select number of bathrooms
+            # select number of bedrooms
             dcc.Dropdown(
                 [str(i) for i in range(1, 29)],
                 id='number of bedrooms selection',
-                multi=True,value=all_bathrooms,
+                multi=True,value=all_bedrooms,
                 placeholder="Multi-select number of bedrooms"
             ),
             html.Div(id='dd-output-container-bedroom'),
 
-            # select number of bedrooms
+            # select number of bathrooms
             dcc.Dropdown(
                 [str(i) for i in range(1, 15)],
                 id='number of bathrooms selection',
-                multi=True,value=all_bedrooms,
+                multi=True,value=all_bathrooms,
                 placeholder="Multi-select number of bathrooms"
             ),
             html.Div(id='dd-output-container-bathroom'),
@@ -109,22 +109,80 @@ app.layout = html.Div([
     Input('property type selection', 'value')
 )
 
-def update_figure(cities, bedrooms, bathrooms, propTypes):
+
+
+def update_dashboard(sortType, cities, bedrooms, bathrooms, propTypes):
+    print("callback triggered")
     for city in selectedCities:
         selectedCities[city] = city in cities if cities else False
+        print("Selected city: ", city, "status: ", selectedCities[city])
     for bathroom in selectedBathrooms:
         selectedBathrooms[bathroom] = bathroom in bathrooms if bathrooms else False
+        print("Selected bathroom: ", bathroom, "status: ", selectedBathrooms[bathroom])
     for bedroom in selectedBedrooms:
         selectedBedrooms[bedroom] = bedroom in bedrooms if bedrooms else False
+        print("Selected bathroom: ", bathroom, "status: ", selectedBathrooms[bathroom])
     for propType in selectedPropTypes:
         selectedPropTypes[propType] = propType in propTypes if propType else False
 
-    return createFig(df, selectedCities, selectedPropTypes, selectedBedrooms, selectedBathrooms)
+    tempDataset = parseSelectedData(df, selectedCities, selectedPropTypes, selectedBedrooms, selectedBathrooms)
+
+    if sortType == "QuickSort Ascending":
+        quicksort(tempDataset.data, 0, len(tempDataset.data)-1, "ascending")
+    elif sortType == "MergeSort Ascending":
+        mergeSort(tempDataset.data, 0, len(tempDataset.data)-1, "ascending")
+    elif sortType == "QuickSort Descending":
+        quicksort(tempDataset.data, 0, len(tempDataset.data)-1, "descending")
+    elif sortType == "MergeSort Descending":
+        mergeSort(tempDataset.data, 0, len(tempDataset.data)-1, "descending")
+
+    newDf = pd.DataFrame(columns=["property_id",
+                                  "price",
+                                  "city",
+                                  "property_type",
+                                  "longitude",
+                                  "latitude",
+                                  "bedrooms",
+                                  "baths"])
+
+    for item in tempDataset.data:
+        newDf.loc[len(newDf)] = [item.id,
+                                 item.price,
+                                 item.city,
+                                 item.propType,
+                                 item.long,
+                                 item.lat,
+                                 item.bedrooms,
+                                 item.baths]
+
+
+
+
+    return (createFig(newDf, selectedCities, selectedPropTypes, selectedBedrooms, selectedBathrooms),
+            newDf.to_dict("records"))
+
+
+
+# def update_figure(sort_option, cities, bedrooms, bathrooms, propTypes):
+#     for city in selectedCities:
+#         selectedCities[city] = city in cities if cities else False
+#         print("Selected city: ", city, "status: ", selectedCities[city])
+#     for bathroom in selectedBathrooms:
+#         selectedBathrooms[bathroom] = bathroom in bathrooms if bathrooms else False
+#         print("Selected bathroom: ", bathroom, "status: ", selectedBathrooms[bathroom])
+#     for bedroom in selectedBedrooms:
+#         selectedBedrooms[bedroom] = bedroom in bedrooms if bedrooms else False
+#         print("Selected bathroom: ", bathroom, "status: ", selectedBathrooms[bathroom])
+#     for propType in selectedPropTypes:
+#         selectedPropTypes[propType] = propType in propTypes if propType else False
+#
+#
+#     return createFig(df, selectedCities, selectedPropTypes, selectedBedrooms, selectedBathrooms)
 
 # TODO: implement update table with updated dictionary of data,
 #  make sure it implements merge and quick sort as needed
-# def update_table():
-#     df = getSelectedData()
+def update_table():
+    df = getSelectedData()
 
 if __name__ == '__main__':
     app.run(debug=True)
