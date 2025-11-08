@@ -1,4 +1,5 @@
-# this code snippet was referenced from discussion slides
+# This code snippet was referenced from discussion slides
+
 def partition(arr, low, high, sortOrder):
     pivot = arr[low]
     up = low + 1

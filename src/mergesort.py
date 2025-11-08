@@ -1,4 +1,4 @@
-# The implementation for mergesort was referenced from
+# The implementation for mergesort was referenced from the slides
 
 # Merge two subarrays from arr
 def merge(arr, left, mid, right, sortOrder):
@@ -42,7 +42,6 @@ def merge(arr, left, mid, right, sortOrder):
         arr[k] = Y[j]
         j += 1
         k += 1
-
 
 def mergeSort(arr, left, right, sortOrder="descending"):
     if left < right:

@@ -1,10 +1,6 @@
-import pandas as pd
 from dataset import Dataset
 
-df = pd.read_csv("pakistanHousingData_cleaned.csv")
-df["bedrooms"] = df["bedrooms"].astype(str)
-df["baths"] = df["baths"].astype(str)
-
+# This function creates a Dataset object out of the pieces of data selected in the dictionaries
 def parseSelectedData(df, cityDict, propDict, bedDict, bathDict):
 
     for key in cityDict:
@@ -27,7 +23,7 @@ def parseSelectedData(df, cityDict, propDict, bedDict, bathDict):
 
     return Dataset(df)
 
-
+# This function is used to retrieve data from the backend to communicate with the frontend
 def getSelectedData(df, cityDict, propDict, bedDict, bathDict):
 
     for key in cityDict:
@@ -50,8 +46,3 @@ def getSelectedData(df, cityDict, propDict, bedDict, bathDict):
 
     return df
 
-# Testing:
-
-# selectedData = parseSelectedData(df, cities, propertyTypes, bedrooms, bathrooms)
-# for house in selectedData.data:
-#     print(house);

@@ -7,22 +7,24 @@ import pandas as pd
 
 from parseSelectedData import getSelectedData
 
+# This function is used to adjust the initial zoom of the map based on the geography of the selected data
 def spread_to_zoom(spread):
     if spread > 10:
-        return 7  # country level
+        return 7  # Country level
     elif spread > 5:
-        return 9  # regional view
+        return 9  # Regional view
     elif spread > 2:
-        return 11  # city-level
+        return 11  # City-level
     elif spread > 1:
-        return 13  # neighborhood
+        return 13  # Neighborhood
     else:
-        return 15  # street view
+        return 15  # Street view
 
+# This function is used to generate the frontend map visuals
 def createFig(df, cityDict, propDict, bedDict, bathDict):
     df = getSelectedData(df, cityDict, propDict, bedDict, bathDict)
 
-    # prevent empty map:
+    # Prevent empty map:
     if df.empty:
         return {
             'layout': {

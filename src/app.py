@@ -7,31 +7,30 @@ from quicksort import *
 from mergesort import *
 from parseSelectedData import *
 
-
 # Read dataset
-df = pd.read_csv("pakistanHousingData_cleaned.csv") # Not needed here, should be in main
+df = pd.read_csv("pakistanHousingData_cleaned.csv")
 df["bedrooms"] = df["bedrooms"].astype(str)
 df["baths"] = df["baths"].astype(str)
 
+# Create frontend application
 app = Dash()
 app.layout = html.Div([
-    # title
+    # Title
     html.H1("Pakistan Housing Prices"),
 
     html.Div([
-        # display map centered on selected data
+        # Display map centered on selected data
         dcc.Graph(
             id='All of Pakistan',
             figure=createFig(df, selectedCities, selectedPropTypes, selectedBedrooms, selectedBathrooms),
             style={'width': '70%'}
         ),
-        # now display table of data in the middle
+        # Display datatable in center
         html.Div([
             html.H3("Sorted Housing Data"),
             dash_table.DataTable(
                 id='housing-table',
                 columns=[{"name": i, "id": i} for i in df.columns],
-                # TODO: set data equal to a dictionary representing the updated data
                 data=df.to_dict("records"),
                 style_table={'height': '600px', 'overflowY': 'auto'},
                 style_cell={'textAlign': 'left', 'padding': '5px'},
@@ -47,10 +46,10 @@ app.layout = html.Div([
             'border': '1px solid #ccc'
         }),
 
-        # filters and dropdowns for all selections
+        # Filters and dropdowns for all selections
         html.Div([
 
-            # select which sorting method
+            # Select which sorting method
             dcc.Dropdown(
                 ['QuickSort Ascending', 'MergeSort Ascending', 'QuickSort Descending', 'MergeSort Descending'],
                 id='sorting-options',
@@ -59,16 +58,16 @@ app.layout = html.Div([
             ),
             html.Div(id='dd-output-container-sorting'),
 
-            # select which city
+            # Select which city(s)
             dcc.Dropdown(
                 ['Faisalabad', 'Islamabad', 'Karachi', 'Lahore', 'Rawalpindi'],
                 id='city selection',
-                multi=False, value='Islamabad',
+                multi=True, value='Islamabad',
                 placeholder="Select which cities"
             ),
             html.Div(id='dd-output-container-city'),
 
-            # select multiple property types
+            # Select which property types
             dcc.Dropdown(
                 ["House", "Penthouse", "Farm House", "Lower Portion", "Upper Portion"],
                 id='property type selection',
@@ -77,7 +76,7 @@ app.layout = html.Div([
             ),
             html.Div(id='dd-output-container-property'),
 
-            # select number of bedrooms
+            # Select number of bedrooms
             dcc.Dropdown(
                 [str(i) for i in range(0, 29)],
                 id='number of bedrooms selection',
@@ -86,7 +85,7 @@ app.layout = html.Div([
             ),
             html.Div(id='dd-output-container-bedroom'),
 
-            # select number of bathrooms
+            # Select number of bathrooms
             dcc.Dropdown(
                 [str(i) for i in range(0, 15)],
                 id='number of bathrooms selection',
@@ -99,6 +98,7 @@ app.layout = html.Div([
     ], style={'display': 'flex', 'justifyContent': 'space-between'})
 ])
 
+# Front end communication to update backend data for datatable
 @app.callback(
     Output('housing-table', 'data'),
     Input('sorting-options', 'value'),
@@ -108,6 +108,7 @@ app.layout = html.Div([
     Input('property type selection', 'value')
 )
 
+# Update backend data regarding creation of datatable
 def update_data(sortType, cities, bedrooms, bathrooms, propTypes):
     print("callback triggered")
     for city in selectedCities:
@@ -156,6 +157,7 @@ def update_data(sortType, cities, bedrooms, bathrooms, propTypes):
 
     return table_data
 
+# Front end communication to update backend data for map
 @app.callback(
     Output('All of Pakistan', 'figure'),
     Input('city selection', 'value'),
@@ -163,16 +165,18 @@ def update_data(sortType, cities, bedrooms, bathrooms, propTypes):
     Input('number of bathrooms selection', 'value'),
     Input('property type selection', 'value')
 )
+
+# Update backend data regarding creation of map
 def update_figure(cities, bedrooms, bathrooms, propTypes):
     for city in selectedCities:
         selectedCities[city] = city in cities if cities else False
-        print("Selected city: ", city, "status: ", selectedCities[city])
+        print("Selected city: ", city, "status: ", selectedCities[city]) # Debugging statement
     for bathroom in selectedBathrooms:
         selectedBathrooms[bathroom] = bathroom in bathrooms if bathrooms else False
-        print("Selected bathroom: ", bathroom, "status: ", selectedBathrooms[bathroom])
+        print("Selected bathroom: ", bathroom, "status: ", selectedBathrooms[bathroom]) # Debugging statement
     for bedroom in selectedBedrooms:
         selectedBedrooms[bedroom] = bedroom in bedrooms if bedrooms else False
-        print("Selected bedroom: ", bedroom, "status: ", selectedBedrooms[bedroom])
+        print("Selected bedroom: ", bedroom, "status: ", selectedBedrooms[bedroom]) # Debugging statement
     for propType in selectedPropTypes:
         selectedPropTypes[propType] = propType in propTypes if propType else False
 

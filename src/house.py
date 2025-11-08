@@ -1,3 +1,4 @@
+# This object is used to hold the attributes of a given property in the dataframe
 class House:
     def __init__(self, id, price, city, propType, long, lat, bedrooms, baths):
         self.id = id

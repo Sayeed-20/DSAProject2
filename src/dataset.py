@@ -2,6 +2,7 @@ from house import House
 import pandas as pd
 import mergesort
 
+# This object is used to encapsulate an array of House objects, based on the data from the dataframe
 class Dataset:
 
     def __init__(self, df, sortOrder = "unsorted"):
@@ -18,14 +19,3 @@ class Dataset:
 
             newHouse = House(id, price, city, propType, long, lat, bedrooms, baths)
             self.data.append(newHouse)
-
-    def changeSortStatus(self, sortOrder):
-        self.sortOrder = sortOrder
-        # During initialization: will change sortOrder accordingly
-        #e.g. initialize ascending quicksort will: quicksort(arr ...) and dataset.changeSortStatus(ascending)
-
-    def flipSortStatus(self):
-        if self.sortOrder == "ascending":
-            self.sortOrder = "descending"
-        elif self.sortOrder == "descending":
-            self.sortOrder = "ascending"
