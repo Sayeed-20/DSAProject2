@@ -1,39 +1,26 @@
-def median(a, b, c):
-    if b < a < c or b > a > c:
-        return a
-    elif a < b < c or a > b > c:
-        return b
-    else:
-        return c
-
 # this code snippet was referenced from discussion slides
 def partition(arr, low, high, sortOrder):
-    pivot = median(arr[low], arr[(high + low)//2], arr[high])
-    up = low
+    pivot = arr[low]
+    up = low + 1
     down = high
-    while up < down:
+    while up <= down:
         if sortOrder == "ascending":
-            for i in range(up, high):
-                if arr[up] >= pivot:
-                    break
+            while up <= high and arr[up] < pivot:
                 up += 1
-            for j in range(high, low, -1):
-                if arr[down] <= pivot:
-                    break
+            while arr[down] > pivot:
                 down -= 1
         elif sortOrder == "descending":
-            for i in range(up, high):
-                if arr[up] <= pivot:
-                    break
+            while up <= high and arr[up] > pivot:
                 up += 1
-            for j in range(high, low, -1):
-                if arr[down] >= pivot:
-                    break
+            while arr[down] < pivot:
                 down -= 1
 
         if up < down:
             arr[up], arr[down] = arr[down], arr[up]
-
+            up += 1
+            down -= 1
+        elif up == down:
+            break
 
     arr[low], arr[down] = arr[down], arr[low]
     return down

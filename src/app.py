@@ -32,7 +32,7 @@ app.layout = html.Div([
                 id='housing-table',
                 columns=[{"name": i, "id": i} for i in df.columns],
                 # TODO: set data equal to a dictionary representing the updated data
-                 data=df.to_dict("records"),
+                data=df.to_dict("records"),
                 style_table={'height': '600px', 'overflowY': 'auto'},
                 style_cell={'textAlign': 'left', 'padding': '5px'},
                 style_header={'backgroundColor': 'lightgrey', 'fontWeight': 'bold'},
@@ -63,7 +63,7 @@ app.layout = html.Div([
             dcc.Dropdown(
                 ['Faisalabad', 'Islamabad', 'Karachi', 'Lahore', 'Rawalpindi'],
                 id='city selection',
-                multi=True, value='Faisalabad',
+                multi=False, value='Islamabad',
                 placeholder="Select which cities"
             ),
             html.Div(id='dd-output-container-city'),
@@ -79,7 +79,7 @@ app.layout = html.Div([
 
             # select number of bedrooms
             dcc.Dropdown(
-                [str(i) for i in range(1, 29)],
+                [str(i) for i in range(0, 29)],
                 id='number of bedrooms selection',
                 multi=True,value=all_bedrooms,
                 placeholder="Multi-select number of bedrooms"
@@ -88,7 +88,7 @@ app.layout = html.Div([
 
             # select number of bathrooms
             dcc.Dropdown(
-                [str(i) for i in range(1, 15)],
+                [str(i) for i in range(0, 15)],
                 id='number of bathrooms selection',
                 multi=True,value=all_bathrooms,
                 placeholder="Multi-select number of bathrooms"
@@ -100,7 +100,6 @@ app.layout = html.Div([
 ])
 
 @app.callback(
-    Output('All of Pakistan', 'figure'),
     Output('housing-table', 'data'),
     Input('sorting-options', 'value'),
     Input('city selection', 'value'),
@@ -109,9 +108,7 @@ app.layout = html.Div([
     Input('property type selection', 'value')
 )
 
-
-
-def update_dashboard(sortType, cities, bedrooms, bathrooms, propTypes):
+def update_data(sortType, cities, bedrooms, bathrooms, propTypes):
     print("callback triggered")
     for city in selectedCities:
         selectedCities[city] = city in cities if cities else False
@@ -121,7 +118,7 @@ def update_dashboard(sortType, cities, bedrooms, bathrooms, propTypes):
         print("Selected bathroom: ", bathroom, "status: ", selectedBathrooms[bathroom])
     for bedroom in selectedBedrooms:
         selectedBedrooms[bedroom] = bedroom in bedrooms if bedrooms else False
-        print("Selected bathroom: ", bathroom, "status: ", selectedBathrooms[bathroom])
+        print("Selected bedroom: ", bedroom, "status: ", selectedBedrooms[bedroom])
     for propType in selectedPropTypes:
         selectedPropTypes[propType] = propType in propTypes if propType else False
 
@@ -155,34 +152,31 @@ def update_dashboard(sortType, cities, bedrooms, bathrooms, propTypes):
                                  item.bedrooms,
                                  item.baths]
 
+    table_data = newDf.to_dict("records")
 
+    return table_data
 
+@app.callback(
+    Output('All of Pakistan', 'figure'),
+    Input('city selection', 'value'),
+    Input('number of bedrooms selection', 'value'),
+    Input('number of bathrooms selection', 'value'),
+    Input('property type selection', 'value')
+)
+def update_figure(cities, bedrooms, bathrooms, propTypes):
+    for city in selectedCities:
+        selectedCities[city] = city in cities if cities else False
+        print("Selected city: ", city, "status: ", selectedCities[city])
+    for bathroom in selectedBathrooms:
+        selectedBathrooms[bathroom] = bathroom in bathrooms if bathrooms else False
+        print("Selected bathroom: ", bathroom, "status: ", selectedBathrooms[bathroom])
+    for bedroom in selectedBedrooms:
+        selectedBedrooms[bedroom] = bedroom in bedrooms if bedrooms else False
+        print("Selected bedroom: ", bedroom, "status: ", selectedBedrooms[bedroom])
+    for propType in selectedPropTypes:
+        selectedPropTypes[propType] = propType in propTypes if propType else False
 
-    return (createFig(newDf, selectedCities, selectedPropTypes, selectedBedrooms, selectedBathrooms),
-            newDf.to_dict("records"))
-
-
-
-# def update_figure(sort_option, cities, bedrooms, bathrooms, propTypes):
-#     for city in selectedCities:
-#         selectedCities[city] = city in cities if cities else False
-#         print("Selected city: ", city, "status: ", selectedCities[city])
-#     for bathroom in selectedBathrooms:
-#         selectedBathrooms[bathroom] = bathroom in bathrooms if bathrooms else False
-#         print("Selected bathroom: ", bathroom, "status: ", selectedBathrooms[bathroom])
-#     for bedroom in selectedBedrooms:
-#         selectedBedrooms[bedroom] = bedroom in bedrooms if bedrooms else False
-#         print("Selected bathroom: ", bathroom, "status: ", selectedBathrooms[bathroom])
-#     for propType in selectedPropTypes:
-#         selectedPropTypes[propType] = propType in propTypes if propType else False
-#
-#
-#     return createFig(df, selectedCities, selectedPropTypes, selectedBedrooms, selectedBathrooms)
-
-# TODO: implement update table with updated dictionary of data,
-#  make sure it implements merge and quick sort as needed
-def update_table():
-    df = getSelectedData()
+    return createFig(df, selectedCities, selectedPropTypes, selectedBedrooms, selectedBathrooms)
 
 if __name__ == '__main__':
     app.run(debug=True)

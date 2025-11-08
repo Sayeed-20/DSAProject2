@@ -54,5 +54,5 @@ selectedBathrooms = {"0": False,
 
 all_cities = ['Faisalabad', 'Islamabad', 'Karachi', 'Lahore', 'Rawalpindi']
 all_types = ["House", "Penthouse", "Farm House", "Lower Portion", "Upper Portion"]
-all_bedrooms = [str(i) for i in range(1, 29)]
-all_bathrooms = [str(i) for i in range(1, 15)]
+all_bedrooms = [str(i) for i in range(0, 29)]
+all_bathrooms = [str(i) for i in range(0, 15)]

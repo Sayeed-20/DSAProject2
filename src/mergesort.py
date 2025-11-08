@@ -3,15 +3,11 @@
 # Merge two subarrays from arr
 def merge(arr, left, mid, right, sortOrder):
     # Create X = arr[left..mid] & Y = arr[mid+1..right]
-    n1 = mid - left + 1
-    n2 = right - mid
-    X = []
-    Y = []
+    X = arr[left : mid + 1]
+    Y = arr[mid + 1 : right + 1]
 
-    for i in range(n1):
-        X[i] = arr[left + i]
-    for j in range(n2):
-        Y[j] = arr[mid + 1 + j]
+    n1 = len(X)
+    n2 = len(Y)
 
     # Merge the arrays X and Y into arr
     i = 0
