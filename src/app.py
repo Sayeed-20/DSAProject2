@@ -78,7 +78,7 @@ app.layout = html.Div([
 
             # Select number of bedrooms
             dcc.Dropdown(
-                [str(i) for i in range(0, 29)],
+                [str(i) for i in range(0, 29) if i != 26],
                 id='number of bedrooms selection',
                 multi=True,value=all_bedrooms,
                 placeholder="Multi-select number of bedrooms"
